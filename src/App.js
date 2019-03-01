@@ -1,26 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ApolloProvider } from 'react-apollo'
+import ApolloClient from 'apollo-boost';
+import gql from 'graphql-tag'
+
+import Router from './components/Router';
+import { domain } from './config/app.json'
+
+const client = new ApolloClient({
+  uri: `${domain.env.siteUrl}/graphql`
+  // uri: "https://48p1r2roz4.sse.codesandbox.io"
+})
+
+// client
+//   .query({
+//     query: gql`
+//       query Posts {
+//         posts {
+//           edges {
+//             node {
+//               title
+//               content
+//             }
+//           }
+//         }
+//       }
+//     `
+//   })
+//   .then(result => console.log(result));
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <ApolloProvider client={client}>
+        <Router />
+      </ApolloProvider>
     );
   }
 }

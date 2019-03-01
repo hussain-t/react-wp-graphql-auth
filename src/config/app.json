@@ -1,0 +1,14 @@
+{
+  "domain": {
+    "env": {
+      "siteUrl": "http://localhost/lexcampus/"
+    }
+  },
+  "API": {
+    "WP": "wp-json/",
+    "JWT": "jwt-auth/v1/"
+  },
+  "endpoint": {
+    "token": "token/"
+  }
+}
