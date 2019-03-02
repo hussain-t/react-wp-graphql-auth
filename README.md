@@ -13,7 +13,7 @@ Install and active the following plugins in your WordPress backend:
 1. [WPGraphQL](https://github.com//wp-graphql/wp-graphql)
 2. [WPGraphQL JWT Authentication](https://github.com/wp-graphql/wp-graphql-jwt-authentication)
 
-**Note: Follow the instructions given by the [WPGraphQL](https://github.com//wp-graphql/wp-graphql) author to avoid exceptional behaviors.**
+**Note: Follow the instructions given by [WPGraphQL](https://github.com//wp-graphql/wp-graphql) author to avoid exceptional behaviors.**
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
