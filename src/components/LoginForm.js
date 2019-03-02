@@ -25,41 +25,55 @@ const LOGIN_USER = gql`
 class LoginForm extends Component {
   state = {
     validate: false,
-    loading: false,
     username: '',
     password: '',
     error: '',
   }
+  _isMounted = false;
 
-  handleLogin = async (event, login) => {
-    try {
-      event.preventDefault();
-      const { username, password } = this.state;
-      this.setState({ loading: true, validate: true, error: false });
-      login({ variables: { username, password } })
-    } catch (e) {
-      console.log(e)
-    }
+  componentDidMount() {
+    this._isMounted = true;
   }
 
-  // .then(user => this.handleLoginSuccess(user))
-  // .catch(error => this.handleLoginFail(error))
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  handleLogin = async (event, login) => {
+    event.preventDefault();
+    const { username, password } = this.state;
+    if(this._isMounted) {
+      this.setState({ validate: true });
+    }
+    await login({ variables: { username, password } })
+      .then(response => this.handleLoginSuccess(response))
+      .catch(err => this.handleLoginFail(err.graphQLErrors[0].message))
+  }
   
-  handleLoginSuccess = user => {
-    localStorage.setItem(AUTH_TOKEN, JSON.stringify(user));
-    console.log('user', user)
-    this.setState({
-      validate: false,
-      loading: false,
-      username: '',
-      password: '',
-      error: ''
-    });
+  handleLoginSuccess = response => {
+    localStorage.setItem(AUTH_TOKEN, JSON.stringify(response.data.login));
+    this.props.history.push('/profile');
+    if(this._isMounted) {
+      this.setState({
+        validate: false,
+        username: '',
+        password: '',
+        error: '',
+      });
+    }
     this.props.history.push('/profile');
   }
 
-  handleLoginFail = error => {
-    this.setState({ validate: true, loading: false, error: 'Invslid username / password' });
+  handleLoginFail = err => {
+    const error = err.split('_').join(' ').toUpperCase();
+
+    if(this._isMounted) {
+      this.setState({ 
+        validate: true, 
+        loading: false, 
+        error ,
+      });
+    }
   }
 
   handleUsername = username => {
@@ -70,14 +84,14 @@ class LoginForm extends Component {
     this.setState({ password });
   }
 
-  renderError() {
-    if (this.state.error) {
+  renderMessage(loading, error) {
+    if (error) {
       return (
         <Alert variant="danger">
           {this.state.error}
         </Alert>
       )
-    } else if (this.state.loading) {
+    } else if (loading) {
       return (
         <Alert variant="primary">
           Loading...
@@ -90,22 +104,14 @@ class LoginForm extends Component {
     const { validate } = this.state;
     return (
       <Mutation mutation={LOGIN_USER}>
-        {(login, { loading, error, data }) => (
+        {(login, { loading, error }) => (
           <div className="container">
           <Form 
             method="POST" 
             noValidate
             validated={validate}
-            onSubmit={(event) => {
-              event.preventDefault();
-              const { username, password } = this.state;
-              this.setState({ loading: true, validate: true, error: false });
-              login({ variables: { username, password } })
-            }}
+            onSubmit={(event) => this.handleLogin(event, login)}
           >
-            <p>{JSON.stringify(loading)}</p>
-            <p>{JSON.stringify(error)}</p>
-            <p>{JSON.stringify(data)}</p>
             <h2>React WPGraphQL Auth</h2>
             <Form.Group controlId="username">
               <Form.Label>Username</Form.Label>
@@ -129,7 +135,7 @@ class LoginForm extends Component {
               />
               <Form.Control.Feedback type="invalid">Password cannot be empty!</Form.Control.Feedback>
             </Form.Group>
-            {this.renderError()}
+            {this.renderMessage(loading, error)}
             <Button variant="primary" type="submit">
               Login
             </Button>
@@ -140,7 +146,5 @@ class LoginForm extends Component {
     )
   }
 }
-
-
 
 export default LoginForm;

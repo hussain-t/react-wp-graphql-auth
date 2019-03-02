@@ -1,7 +1,7 @@
 {
   "domain": {
     "env": {
-      "siteUrl": "http://localhost/lexcampus/"
+      "siteUrl": "https://lexcampus.on-its-way.com/"
     }
   },
   "API": {
