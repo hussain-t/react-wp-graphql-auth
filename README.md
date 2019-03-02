@@ -1,4 +1,4 @@
-# React WPGraphQL JWT Authentication
+# React WPGraphQL JWT Authentication with Apollo Client
 
 ## Screenshots
 
@@ -38,5 +38,6 @@ Go to `app.json` file and change the `siteUrl` value to yours.
 
 👉 Client side form validations<br>
 👉 Server side form validations<br>
-👉 WordPress Authentication (login) with JWT<br>
+👉 WordPress Authentication (login) with WPGraphQl<br>
+👉 [Apollo Client](https://www.apollographql.com/) for handling GraphQL mutation
 👉 Protected route with [React Router](https://reacttraining.com/react-router/)
