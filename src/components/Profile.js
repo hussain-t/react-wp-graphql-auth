@@ -11,7 +11,7 @@ const Profile = props => {
         <div className="user-snippet">
           <h1>{getUserSnippet(user.user.name)}</h1>
         </div>
-        <h2>{user.user_display_name}</h2>
+        <h2>{user.user.name}</h2>
         <button className="btn btn-primary" onClick={() => {
           localStorage.removeItem(AUTH_TOKEN);
           props.history.push('/');
